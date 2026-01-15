@@ -1,0 +1,11 @@
+.github
+scripts
+tests
+Justfile
+
+docs/*
+!docs/*.pdf
+!docs/assets
+docs/assets/*
+!docs/assets/*.png
+!docs/assets/*.svg
