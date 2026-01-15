@@ -1,5 +1,4 @@
-// #import "@preview/fitch:0.1.0": *
-#import "../../lib.typ": *
+#import "@preview/fitch:0.1.0": *
 
 #set page(width: auto, height: auto, margin: .5cm)
 
