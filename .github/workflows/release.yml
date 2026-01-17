@@ -1,0 +1,113 @@
+name: Package and push to registry repo
+on:
+  push:
+    branches:
+      - 'release/*'
+
+env:
+  # the repository to which to push the release version
+  # usually a fork of typst/packages (https://github.com/typst/packages/)
+  # that you have push privileges to
+  REGISTRY_REPO: Lipen/typst-packages
+  # the path within that repo where the "<name>/<version>" directory should be put
+  # for the Typst package registry, keep this as is
+  PATH_PREFIX: packages/preview
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install just
+        uses: taiki-e/install-action@v2
+        with:
+          tool: just
+
+      - name: Setup typst
+        uses: typst-community/setup-typst@v4
+        with:
+          typst-version: latest
+
+      - name: Determine and check package version
+        run: |
+          . scripts/setup
+          echo "PKG_NAME=${PKG_PREFIX}" >> "${GITHUB_ENV}"
+          echo "PKG_VERSION=${VERSION}" >> "${GITHUB_ENV}"
+
+          BRANCH="${GITHUB_REF_NAME}"
+          RELEASE="${BRANCH#release/}"
+          if [[ "${RELEASE}" != "${VERSION}" ]]; then
+            echo "release branch '${BRANCH}' does not match package version ${VERSION}" >&2
+            exit 1
+          fi
+
+      - name: Build package
+        run: |
+          just ci
+          just package out
+
+      - name: Checkout package registry
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.REGISTRY_REPO }}
+          token: ${{ secrets.REGISTRY_TOKEN }}
+          path: typst-packages
+          fetch-depth: 0
+          sparse-checkout: ${{ env.PATH_PREFIX }}/${{ env.PKG_NAME }}
+
+      - name: Release package
+        run: |
+          set -euo pipefail
+
+          PKG_DIR="typst-packages/${{ env.PATH_PREFIX }}/${{ env.PKG_NAME }}"
+          PREVIEW_BRANCH="${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}"
+          GIT_USER_NAME="$(git log -1 --pretty=format:'%an')"
+          GIT_USER_EMAIL="$(git log -1 --pretty=format:'%ae')"
+
+          # update package contents
+          rm -rf "${PKG_DIR}/${{ env.PKG_VERSION }}"
+          mkdir -p "${PKG_DIR}"
+
+          mv "out/${{ env.PKG_NAME }}/${{ env.PKG_VERSION }}" "${PKG_DIR}/"
+
+          # collect provenance
+          SOURCE_COMMIT="${GITHUB_SHA}"
+          SOURCE_REPO="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
+          SOURCE_BRANCH="${GITHUB_REF_NAME}"
+
+          # enter registry repo
+          cd typst-packages
+
+          git fetch origin
+
+          if git show-ref --verify --quiet "refs/remotes/origin/${PREVIEW_BRANCH}"; then
+            git checkout "${PREVIEW_BRANCH}"
+          else
+            git checkout -b "${PREVIEW_BRANCH}" origin/main
+          fi
+
+          # write provenance
+          # cat > "${PKG_DIR}/${{ env.PKG_VERSION }}/SOURCE" <<EOF
+          # source-repo: ${SOURCE_REPO}
+          # source-branch: ${SOURCE_BRANCH}
+          # source-commit: ${SOURCE_COMMIT}
+          # generated-at: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          # EOF
+
+          # configure author
+          git config user.name  "${GIT_USER_NAME}"
+          git config user.email "${GIT_USER_EMAIL}"
+
+          # commit if needed
+          git add "${PKG_DIR}/${{ env.PKG_VERSION }}"
+
+          if git diff --cached --quiet; then
+            echo "No changes to publish."
+            exit 0
+          fi
+
+          git commit -m "${{ env.PKG_NAME }} ${{env.PKG_VERSION}} (from \`${SOURCE_COMMIT:0:7}\`)"
+
+          git push origin

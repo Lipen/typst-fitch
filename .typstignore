@@ -1,6 +1,7 @@
 .github
 scripts
 tests
+out
 Justfile
 
 docs/*
