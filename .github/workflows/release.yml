@@ -2,7 +2,7 @@ name: Package and push to registry repo
 on:
   push:
     branches:
-      - 'release/*'
+      - "release/*"
 
 env:
   # the repository to which to push the release version
@@ -60,35 +60,38 @@ jobs:
         run: |
           set -euo pipefail
 
-          PKG_DIR="typst-packages/${{ env.PATH_PREFIX }}/${{ env.PKG_NAME }}"
-          PREVIEW_BRANCH="${{ env.PKG_NAME }}-${{ env.PKG_VERSION }}"
+          PREVIEW_BRANCH="${PKG_NAME}-${PKG_VERSION}"
           GIT_USER_NAME="$(git log -1 --pretty=format:'%an')"
           GIT_USER_EMAIL="$(git log -1 --pretty=format:'%ae')"
 
-          # update package contents
-          rm -rf "${PKG_DIR}/${{ env.PKG_VERSION }}"
-          mkdir -p "${PKG_DIR}"
-
-          mv "out/${{ env.PKG_NAME }}/${{ env.PKG_VERSION }}" "${PKG_DIR}/"
-
-          # collect provenance
           SOURCE_COMMIT="${GITHUB_SHA}"
           SOURCE_REPO="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
           SOURCE_BRANCH="${GITHUB_REF_NAME}"
 
+          GIT_USER_NAME="$(git log -1 --pretty=format:'%an')"
+          GIT_USER_EMAIL="$(git log -1 --pretty=format:'%ae')"
+
           # enter registry repo
           cd typst-packages
+
+          PKG_DIR="${{ env.PATH_PREFIX }}/${PKG_NAME}"
 
           git fetch origin
 
           if git show-ref --verify --quiet "refs/remotes/origin/${PREVIEW_BRANCH}"; then
-            git checkout "${PREVIEW_BRANCH}"
+            git checkout -B "${PREVIEW_BRANCH}" "origin/${PREVIEW_BRANCH}"
           else
-            git checkout -b "${PREVIEW_BRANCH}" origin/main
+            git checkout -B "${PREVIEW_BRANCH}" origin/main
           fi
 
+          # update package contents
+          rm -rf "${PKG_DIR}/${PKG_VERSION}"
+          mkdir -p "${PKG_DIR}"
+
+          mv "../out/${PKG_NAME}/${PKG_VERSION}" "${PKG_DIR}/"
+
           # write provenance
-          # cat > "${PKG_DIR}/${{ env.PKG_VERSION }}/SOURCE" <<EOF
+          # cat > "${PKG_DIR}/${PKG_VERSION}/SOURCE" <<EOF
           # source-repo: ${SOURCE_REPO}
           # source-branch: ${SOURCE_BRANCH}
           # source-commit: ${SOURCE_COMMIT}
@@ -96,11 +99,11 @@ jobs:
           # EOF
 
           # configure author
-          git config user.name  "${GIT_USER_NAME}"
+          git config user.name "${GIT_USER_NAME}"
           git config user.email "${GIT_USER_EMAIL}"
 
           # commit if needed
-          git add "${PKG_DIR}/${{ env.PKG_VERSION }}"
+          git add "${PKG_DIR}/${PKG_VERSION}"
 
           if git diff --cached --quiet; then
             echo "No changes to publish."
@@ -109,4 +112,4 @@ jobs:
 
           git commit -m "${{ env.PKG_NAME }} ${{env.PKG_VERSION}} (from \`${SOURCE_COMMIT:0:7}\`)"
 
-          git push origin
+          git push origin HEAD
