@@ -1,4 +1,4 @@
-#import "@preview/fitch:0.1.0": *
+#import "@preview/frederic:0.1.0": *
 
 #set page(width: auto, height: auto, margin: .5cm)
 

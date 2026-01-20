@@ -1,15 +1,17 @@
-# Fitch
+# `frederic`
 
-> Typst package for Fitch-style natural deduction proofs in formal logic.
+> Typst package for [Fitch-style](https://en.wikipedia.org/wiki/Fitch_notation) natural deduction proofs in formal logic.
 
 It supports premises, assumptions, derivation steps, subproofs, and arbitrary nesting, with line numbering, scope bars, and customizable styling.
+
+_The name comes as a tribute to the American logician [Frederic Fitch](https://en.wikipedia.org/wiki/Frederic_Fitch), who developed this proof notation._
 
 ## Quick Start
 
 Import the package in your Typst document:
 
 ```typst
-#import "@preview/fitch:0.1.0": *
+#import "@preview/frederic:0.1.0": *
 ```
 
 Then, create proofs using the `proof` function.
