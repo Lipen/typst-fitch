@@ -203,8 +203,6 @@
   row-gutter: 0.3em,
   /// Scope bars and underlines.
   stroke: 1pt + blue,
-  /// Separator between line numbers and content.
-  sep-stroke: 1pt + blue,
   /// Horizontal spacing between nested bars.
   indent: 1em,
   /// Padding inside the cell.
@@ -315,7 +313,7 @@
     column-gutter: style.col-gutter,
     row-gutter: style.row-gutter,
     inset: style.pad,
-    grid.vline(x: 1, stroke: style.sep-stroke),
+    grid.vline(x: 1, stroke: style.stroke),
     ..cells,
   )
 }

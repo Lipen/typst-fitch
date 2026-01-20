@@ -135,7 +135,6 @@ Use the `style` parameter to customize colors, spacing, and fonts:
   step(2, $B$, rule: "1"),
   style: (
     stroke: 1pt + red,          // Scope bars and underlines
-    sep-stroke: 1pt + green,    // Line number separator
     col-gutter: 1.2em,          // Space between columns
     row-gutter: 0.5em,          // Space between rows
     indent: 1.2em,              // Scope bar indentation
