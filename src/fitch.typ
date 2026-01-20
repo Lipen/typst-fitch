@@ -313,6 +313,13 @@
     column-gutter: style.col-gutter,
     row-gutter: style.row-gutter,
     inset: style.pad,
+    if premises.len() == 0 {
+      // Add top line if there are no premises
+      grid.hline(start: 1, end: 2, stroke: style.stroke)
+    } else {
+      // Otherwise, add "empty" line instead of "none"
+      grid.hline(start: 1, end: 1)
+    },
     grid.vline(x: 1, stroke: style.stroke),
     ..cells,
   )
