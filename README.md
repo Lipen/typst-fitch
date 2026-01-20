@@ -19,11 +19,6 @@ Here's a simple example proving $\neg A$ from $A \rightarrow \neg A$ using the L
 
 $$ A \rightarrow \neg A \quad \vdash \quad \neg A $$
 
-<table>
-
-<tr>
-<td>
-
 ```typst
 #proof(
   premise(1, $A -> not A$),
@@ -39,17 +34,9 @@ $$ A \rightarrow \neg A \quad \vdash \quad \neg A $$
 )
 ```
 
-</td>
-<td>
-
 The output will look like this:
 
 [![Example 1](docs/assets/example1.svg)](docs/assets/example1.typ)
-
-</td>
-</tr>
-
-</table>
 
 Another example demonstrating nested subproofs:
 
