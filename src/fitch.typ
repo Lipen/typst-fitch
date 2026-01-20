@@ -197,17 +197,19 @@
 
 /// Default styling configuration for Fitch proofs.
 #let fitch-style-default = (
+  /// Horizontal spacing between columns.
   col-gutter: 0.8em,
+  /// Vertical spacing between rows.
   row-gutter: 0.3em,
-  // Stroke used for scope bars and assumption underlines.
+  /// Scope bars and underlines.
   stroke: 1pt + blue,
-  // Stroke used for the separator between line numbers and content.
+  /// Separator between line numbers and content.
   sep-stroke: 1pt + blue,
-  // Horizontal spacing between nested bars.
+  /// Horizontal spacing between nested bars.
   indent: 1em,
-  // Padding inside the cell.
+  /// Padding inside the cell.
   pad: 0.5em,
-  // Style for the rule cell.
+  /// Style for the rule cell.
   rule-style: (style: "italic"),
 )
 
