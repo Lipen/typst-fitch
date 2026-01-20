@@ -10,10 +10,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install just
+      - name: Install just and tytanic
         uses: taiki-e/install-action@v2
         with:
-          tool: just
+          tool: just,tytanic
 
       - name: Setup typst
         uses: typst-community/setup-typst@v4
