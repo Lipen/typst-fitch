@@ -1,0 +1,25 @@
+name: Publish release (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The tag to publish the release from
+        required: true
+
+jobs:
+  publish:
+    name: Publish release
+    runs-on: ubuntu-latest
+    concurrency: publish-release
+    permissions:
+      contents: write
+      discussions: write # (for release discussion creation)
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: refs/tags/${{ inputs.tag }}
+
+      - name: Publish GH release
+        uses: ghalactic/github-release-from-tag@v6

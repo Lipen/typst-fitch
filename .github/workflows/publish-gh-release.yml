@@ -1,0 +1,21 @@
+name: Publish release
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    name: Publish release
+    runs-on: ubuntu-latest
+    concurrency: publish-release
+    permissions:
+      contents: write
+      discussions: write # (for release discussion creation)
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Publish GH release
+        uses: ghalactic/github-release-from-tag@v6

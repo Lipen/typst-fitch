@@ -1,0 +1,8 @@
+# Get completion and validation when using the YAML extension for VS Code.
+# yaml-language-server: $schema=https://ghalactic.github.io/github-release-from-tag/schema/config.v6.schema.json
+
+reactions: ["+1", laugh, hooray, heart, rocket, eyes]
+
+discussion:
+  category: Announcements
+  reactions: ["+1", "-1", laugh, hooray, confused, heart, rocket, eyes]
