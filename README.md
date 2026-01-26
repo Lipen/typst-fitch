@@ -119,9 +119,11 @@ Renders the complete proof as a grid with line numbers, scope bars, and justific
 
 ```typst
 #proof(
+  // Custom styling
+  stroke: 1pt + red,
+  col-gutter: 1em,
   premise(1, $A$),
   step(2, $B$, rule: "1"),
-  style: (stroke: 1pt + red, col-gutter: 1em)  // Custom styling
 )
 ```
 
