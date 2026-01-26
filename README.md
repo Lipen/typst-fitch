@@ -141,6 +141,26 @@ You can customize styling via optional named parameters.
 )
 ```
 
+#### `build-proof(..lines)`
+
+Builds a proof structure without rendering. Useful for composing proofs programmatically.
+
+```typst
+#let my-proof = build-proof(
+  premise(1, $A$),
+  step(2, $B$, rule: "from 1"),
+)
+```
+
+#### `render-proof(p, style: (:))`
+
+Renders a proof structure created with `build-proof()`.
+
+```typst
+#let my-proof = build-proof(...)
+#render-proof(my-proof, style: (stroke: 1pt + blue))
+```
+
 ## Examples
 
 See examples in `docs/assets/`:
