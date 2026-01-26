@@ -64,7 +64,8 @@ A proof consists of:
 
 #### `premise(num, content)`
 
-Creates a premise (given fact). Must appear before other lines in a proof.
+Creates a premise (given fact).
+Must appear before other lines in a proof.
 
 ```typst
 premise(1, $A and B$)
@@ -93,7 +94,8 @@ subproof(
 
 #### `subproof(..lines)`
 
-Creates an indented scope containing assumptions and steps. Can be nested.
+Creates an indented scope containing assumptions and steps.
+Can be nested.
 
 ```typst
 // Simple subproof
@@ -143,7 +145,8 @@ You can customize styling via optional named parameters.
 
 #### `build-proof(..lines)`
 
-Builds a proof structure without rendering. Useful for composing proofs programmatically.
+Builds a proof structure without rendering.
+Useful for composing proofs programmatically.
 
 ```typst
 #let my-proof = build-proof(
