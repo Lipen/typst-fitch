@@ -23,3 +23,5 @@ jobs:
 
       - name: Publish GH release
         uses: ghalactic/github-release-from-tag@v6
+        with:
+          prerelease: ${{ (startsWith(inputs.tag, '0.') || startsWith(inputs.tag, 'v0.')) && 'false' || '' }}
