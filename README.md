@@ -62,7 +62,7 @@ A proof consists of:
 
 ### Function Reference
 
-#### `premise(num, content, rule: none)`
+#### `premise(num, content)`
 
 Creates a premise (given fact). Must appear before other lines in a proof.
 
@@ -80,7 +80,7 @@ step(3, $C$, rule: "MP 1, 2")
 step(5, $not A$, rule: [DNE 4])  // Rules can be any Typst content
 ```
 
-#### `assume(num, content, rule: none)`
+#### `assume(num, content)`
 
 Creates an assumption. Must be the first line in a `subproof()`.
 
@@ -113,36 +113,31 @@ subproof(
 )
 ```
 
-#### `proof(..nodes, style: (:))`
+#### `proof(..args)`
 
 Renders the complete proof as a grid with line numbers, scope bars, and justifications.
 
 ```typst
 #proof(
-  // Custom styling
-  stroke: 1pt + red,
-  col-gutter: 1em,
   premise(1, $A$),
   step(2, $B$, rule: "1"),
 )
 ```
 
-### Customizing Appearance
-
-Use the `style` parameter to customize colors, spacing, and fonts:
+You can customize styling via optional named parameters.
 
 ```typst
 #proof(
+  // Custom styling
+  stroke: 1pt + red,          // Scope bars and underlines
+  col-gutter: 1.2em,          // Space between columns
+  row-gutter: 0.5em,          // Space between rows
+  indent: 1.2em,              // Scope bar indentation
+  pad: 0.6em,                 // Cell padding
+  rule-style: (style: "oblique"),  // Rule text style
+
   premise(1, $A$),
   step(2, $B$, rule: "1"),
-  style: (
-    stroke: 1pt + red,          // Scope bars and underlines
-    col-gutter: 1.2em,          // Space between columns
-    row-gutter: 0.5em,          // Space between rows
-    indent: 1.2em,              // Scope bar indentation
-    pad: 0.6em,                 // Cell padding
-    rule-style: (style: "oblique"),  // Rule text style
-  )
 )
 ```
 
@@ -154,29 +149,6 @@ See examples in `docs/assets/`:
 - `example2.typ`: Nested subproofs demonstration
 
 Run `just doc` to compile examples to SVG.
-
-## Advanced Features
-
-### Custom Line Numbers
-
-For complex proofs with special notation, you can use any value for line numbers:
-
-```typst
-#proof(
-  premise(1, $A$),
-  step(2, $B$, rule: "1"),
-  step("∴", $B$, rule: ""),  // Using ∴ symbol
-)
-```
-
-### Custom Rules
-
-Rules accept any Typst content, including colors, sizes, and styled text:
-
-```typst
-step(5, $C$, rule: text(blue)[*Important rule* 1, 2])
-step(6, $D$, rule: [$->$ Intro 5])
-```
 
 ## License
 
